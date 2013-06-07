@@ -15,15 +15,17 @@ var zawgyiCharsArray = zawgyiChars.split("");
 var myanmar3Chars = "ကခငလေယပ";
 var myanmar3CharsArray = myanmar3Chars.split("");
 
+var zawgyiChar = "ၾ";
+
 /**
  * Check the font name
  * If font name is 'Zawgyi-One' or 'Myanmar3'
  * Auto switch the font name
  */
-if (regexZawgyi.test(fontFamilyName) || findByChars(zawgyiCharsArray)) {
+if (regexZawgyi.test(fontFamilyName) || findByChar(zawgyiChar) == true) {
   changeFont('Zawgyi-One');
   chrome.extension.sendRequest({}, function(response) {});
-} else if (regexMyanmar3.test(fontFamilyName) || findByChars(myanmar3CharsArray)){
+} else if (regexMyanmar3.test(fontFamilyName) || findByChar(zawgyiChar) == false){
   changeFont('Myanmar3');
 }
 
@@ -41,6 +43,16 @@ function findByChars(arr) {
 	}
 }
 
+function findByChar(regxChar) {
+
+		var re = new RegExp(regxChar, "g");
+		if (re.test(document.body.innerText)) {
+			return true;
+		}else{
+			return false;
+		}
+	
+}
 
 /**
  * Get the font used for a given element
@@ -64,6 +76,10 @@ function getFontForElement(ele) {
  */
 function changeFont(fontname) {
     fontfamily = fontname;
+	if(fontfamily == 'Myanmar3')
+	{
+		addCssStyleSheet('http://mmwebfonts.comquas.com/fonts/?font=myanmar3');
+	}
     document.getElementsByTagName('body')[0].style.fontFamily = fontfamily;
     var tag = ['body', 'p', 'li', 'span', 'textarea', 'input', 'div', 'a', 'td', 'h1', 'h2', 'h3'];
     var p;
@@ -91,4 +107,15 @@ function changeFont(fontname) {
             }
         }
     }
+}
+
+function addCssStyleSheet(cssFile)
+{
+    
+    var js = document.createElement("link");
+    js.setAttribute("type","text/css");
+	js.setAttribute("rel","stylesheet");
+    js.setAttribute("href",cssFile)
+    document.getElementsByTagName("head")[0].appendChild(js)
+    return false;
 }
