@@ -9,13 +9,14 @@ var regexMyanmar3 = /Myanmar3/;
 
 var fontFamilyName = getFontForElement(document.body);
 
-var zawgyiChars = "ကခဒေငပး";
+/*var zawgyiChars = "ကခဒေငပး";
 var zawgyiCharsArray = zawgyiChars.split("");
 
 var myanmar3Chars = "ကခငလေယပ";
-var myanmar3CharsArray = myanmar3Chars.split("");
+var myanmar3CharsArray = myanmar3Chars.split("");*/
 
 var zawgyiChar = "ၾ";
+var myanmar3Char = "ြ";
 
 /**
  * Check the font name
@@ -25,8 +26,9 @@ var zawgyiChar = "ၾ";
 if (regexZawgyi.test(fontFamilyName) || findByChar(zawgyiChar) == true) {
   changeFont('Zawgyi-One');
   chrome.extension.sendRequest({}, function(response) {});
-} else if (regexMyanmar3.test(fontFamilyName) || findByChar(zawgyiChar) == false){
+} else if (regexMyanmar3.test(fontFamilyName) || findByChar(myanmar3Char) == true){
   changeFont('Myanmar3');
+  chrome.extension.sendRequest({}, function(response) {});
 }
 
 /**
@@ -44,14 +46,12 @@ function findByChars(arr) {
 }
 
 function findByChar(regxChar) {
-
-		var re = new RegExp(regxChar, "g");
-		if (re.test(document.body.innerText)) {
-			return true;
-		}else{
-			return false;
-		}
-	
+	var re = new RegExp(regxChar, "g");
+	if (re.test(document.body.innerText)) {
+		return true;
+	}else{
+		return false;
+	}
 }
 
 /**
