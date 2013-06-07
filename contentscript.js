@@ -109,6 +109,11 @@ function changeFont(fontname) {
     }
 }
 
+/**
+ * Add css style sheet to head tag
+ * @argument {cssFile} css file link to add
+ * @returns {void} 
+ */
 function addCssStyleSheet(cssFile)
 {
     
