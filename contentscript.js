@@ -78,6 +78,7 @@
                     if (prNode.style) prNode.style.fontFamily = "Zawgyi-One";
                 }
                 prNode.className += ' _tt_t_';
+				chrome.extension.sendRequest({}, function(response) {});
             }
         } else {
             for (var i = 0; i < node.childNodes.length; i++) {
