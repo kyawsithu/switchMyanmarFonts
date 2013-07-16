@@ -1,6 +1,6 @@
 {
   "name" : "Myanmar Font Switcher",
-  "version" : "0.3",
+  "version" : "0.4",
   "description" : "Switch the font for Myanmar3 and Zawgyi",
   "background" : {
     "scripts": ["background.js"]

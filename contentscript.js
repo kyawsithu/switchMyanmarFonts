@@ -74,8 +74,10 @@
                 text = prNode.textContent;
                 if (regexUni.test(text) && !regexZG.test(text)) {
                     if (prNode.style) prNode.style.fontFamily = useUnicodeFont;
+					//changeFont(useUnicodeFont);
                 } else {
                     if (prNode.style) prNode.style.fontFamily = "Zawgyi-One";
+					//changeFont("Zawgyi-One");
                 }
                 prNode.className += ' _tt_t_';
 				chrome.extension.sendRequest({}, function(response) {});
@@ -90,3 +92,55 @@
     
     if (document && document.body) tagNode(document.body);
 })();
+
+/**
+ * Switch the font
+ * @argument {fontname} name of the font to switch
+ * @returns {void} 
+ */
+function changeFont(fontname) {
+    fontfamily = fontname;
+    document.getElementsByTagName('body')[0].style.fontFamily = fontfamily;
+    var tag = ['body', 'p', 'li', 'span', 'textarea', 'input', 'div', 'a', 'td', 'h1', 'h2', 'h3'];
+    var p;
+    for (j = 0; j < tag.length; j++) {
+        if (document.getElementsByTagName(tag[j]) != null) {
+            p = document.getElementsByTagName(tag[j]);
+            for (i = 0; i < p.length; i++) {
+                if (p[i].style != undefined) {
+                    p[i].style.fontFamily = fontfamily;
+                }
+            }
+        }
+    }
+    var iframe = document.getElementsByTagName('iframe');
+    for (k = 0; k < iframe.length; k++) {
+        doc = iframe[k].contentDocument;
+        for (j = 0; j < tag.length; j++) {
+            if (document.getElementsByTagName(tag[j]) != null) {
+                p = doc.getElementsByTagName(tag[j]);
+                for (i = 0; i < p.length; i++) {
+                    if (p[i].style != undefined) {
+                        p[i].style.fontFamily = fontfamily;
+                    }
+                }
+            }
+        }
+    }
+}
+
+/**
+ * Add css style sheet to head tag
+ * @argument {cssFile} css file link to add
+ * @returns {void} 
+ */
+function addCssStyleSheet(cssFile)
+{
+    
+    var js = document.createElement("link");
+    js.setAttribute("type","text/css");
+	js.setAttribute("rel","stylesheet");
+    js.setAttribute("href",cssFile)
+    document.getElementsByTagName("head")[0].appendChild(js)
+    return false;
+}
