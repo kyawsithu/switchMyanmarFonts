@@ -91,7 +91,7 @@
     
     if (document && document.body) tagNode(document.body);
 
-    if (fontFamily != '' && fontFamily != null) addStyletHead(fontFamily);
+    //if (fontFamily != '' && fontFamily != null) addStyletHead(fontFamily);
 })();
 
 /**
