@@ -1,9 +1,4 @@
 /*
- * Copyright (c) 2010 The Chromium Authors. All rights reserved.  Use of this
- * source code is governed by a BSD-style license that can be found in the
- * LICENSE file.
- */
-
 // ==UserScript==
 // @name           MyanmarFontTagger
 // @namespace      thantthetkz.mmfonttagger
@@ -15,6 +10,8 @@
 // @uso:version    2.0.2
 // @copyright  2013, ttkz
 // ==/UserScript==
+*/
+
 
 (function() {
     var MutationObserver = window.MutationObserver || window.WebKitMutationObserver || window.MozMutationObserver;
@@ -33,7 +30,7 @@
             } else if (mutation.type == 'characterData') {
                 tagNode(mutation.target);
             }
-                });
+        });
     });
     
     observer.observe(list, {
@@ -60,6 +57,8 @@
     var classNameUnicode = "__ft_unicode";
     var classNameZawgyi = "__ft_zawgyi";
     
+    var fontFamily = '';
+
     var tagNode = function(node) {
         if (node.className && node.className.indexOf('_tt_t_') !== -1) {
             return;
@@ -74,10 +73,10 @@
                 text = prNode.textContent;
                 if (regexUni.test(text) && !regexZG.test(text)) {
                     if (prNode.style) prNode.style.fontFamily = useUnicodeFont;
-					//changeFont(useUnicodeFont);
+					fontFamily = useUnicodeFont;
                 } else {
                     if (prNode.style) prNode.style.fontFamily = "Zawgyi-One";
-					//changeFont("Zawgyi-One");
+					fontFamily = "Zawgyi-One";
                 }
                 prNode.className += ' _tt_t_';
 				chrome.extension.sendRequest({}, function(response) {});
@@ -91,43 +90,9 @@
     }
     
     if (document && document.body) tagNode(document.body);
-})();
 
-/**
- * Switch the font
- * @argument {fontname} name of the font to switch
- * @returns {void} 
- */
-function changeFont(fontname) {
-    fontfamily = fontname;
-    document.getElementsByTagName('body')[0].style.fontFamily = fontfamily;
-    var tag = ['body', 'p', 'li', 'span', 'textarea', 'input', 'div', 'a', 'td', 'h1', 'h2', 'h3'];
-    var p;
-    for (j = 0; j < tag.length; j++) {
-        if (document.getElementsByTagName(tag[j]) != null) {
-            p = document.getElementsByTagName(tag[j]);
-            for (i = 0; i < p.length; i++) {
-                if (p[i].style != undefined) {
-                    p[i].style.fontFamily = fontfamily;
-                }
-            }
-        }
-    }
-    var iframe = document.getElementsByTagName('iframe');
-    for (k = 0; k < iframe.length; k++) {
-        doc = iframe[k].contentDocument;
-        for (j = 0; j < tag.length; j++) {
-            if (document.getElementsByTagName(tag[j]) != null) {
-                p = doc.getElementsByTagName(tag[j]);
-                for (i = 0; i < p.length; i++) {
-                    if (p[i].style != undefined) {
-                        p[i].style.fontFamily = fontfamily;
-                    }
-                }
-            }
-        }
-    }
-}
+    if (fontFamily != '' && fontFamily != null) addStyletHead(fontFamily);
+})();
 
 /**
  * Add css style sheet to head tag
@@ -143,4 +108,25 @@ function addCssStyleSheet(cssFile)
     js.setAttribute("href",cssFile)
     document.getElementsByTagName("head")[0].appendChild(js)
     return false;
+}
+
+/**
+ * Add css style tag to head tag
+ * @argument {fontFamily} css file link to add
+ * @returns {void} 
+ */
+function addStyletHead(fontFamily)
+{
+    var css = '* , html, body, div,p {font-family:'+ fontFamily +' !important;}';
+        head = document.getElementsByTagName('head')[0],
+        style = document.createElement('style');
+
+    style.type = 'text/css';
+    if (style.styleSheet){
+      style.styleSheet.cssText = css;
+    } else {
+      style.appendChild(document.createTextNode(css));
+    }
+
+    head.appendChild(style);
 }
